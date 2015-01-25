@@ -183,7 +183,7 @@ public class DeviceDetailActivity extends ActionBarActivity {
                 catch(JSONException ex){
                     jsonMessage = "Imposible to " + subPath2 + " device";
                 }
-                Toast toast = Toast.makeText(DeviceDetailActivity.this, jsonMessage, Toast.LENGTH_SHORT);
+                Toast toast = Toast.makeText(DeviceDetailActivity.this, jsonMessage, Toast.LENGTH_LONG);
                 toast.show();
             }
         };
@@ -193,6 +193,10 @@ public class DeviceDetailActivity extends ActionBarActivity {
             public void onErrorResponse(VolleyError volleyError) {
                 if(volleyError != null){
                     Toast toast = Toast.makeText(DeviceDetailActivity.this, "Something Happened with the server connection", Toast.LENGTH_SHORT);
+
+                    //NOTE: For modify the toast apparence use a custom view and a custom layout file
+                    //toast.setView(getLayoutInflater().inflate(R.layout.some_toast_layout,null));
+
                     toast.show();
                     Log.e("TrackingRoutes", volleyError.toString());
                 }

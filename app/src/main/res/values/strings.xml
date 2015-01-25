@@ -13,5 +13,6 @@
     <string name="bienvenido">¡Bienvenido!</string>
     <string name="app_id">453439598143385</string>
     <string name="title_activity_device_list">DeviceListActivity</string>
+    <string name="title_activity_register_device">RegisterDeviceActivity</string>
 
 </resources>

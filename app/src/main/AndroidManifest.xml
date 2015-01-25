@@ -45,11 +45,6 @@
         <activity
             android:name=".DeviceListActivity"
             android:label="@string/title_device_list" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".DeviceDetailActivity"
@@ -58,6 +53,15 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.oodoo.trackerapp.DeviceListActivity" />
+        </activity>
+        <activity
+            android:name=".RegisterDeviceActivity"
+            android:label="@string/title_activity_register_device" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
     </application>
 
