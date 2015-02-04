@@ -188,21 +188,7 @@ public class DeviceDetailActivity extends ActionBarActivity {
             }
         };
 
-        Response.ErrorListener errorListener = new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError volleyError) {
-                if(volleyError != null){
-                    Toast toast = Toast.makeText(DeviceDetailActivity.this, "Something Happened with the server connection", Toast.LENGTH_SHORT);
-
-                    //NOTE: For modify the toast apparence use a custom view and a custom layout file
-                    //toast.setView(getLayoutInflater().inflate(R.layout.some_toast_layout,null));
-
-                    toast.show();
-                    Log.e("TrackingRoutes", volleyError.toString());
-                }
-            }
-        };
-        JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.POST,url,null,lockDeviceListListener,errorListener);
+        JsonObjectRequest getRequest = VolleyHelper.getJsonObjectRequest(Request.Method.POST,url,null,lockDeviceListListener);
         VolleyHelper.getInstance(this).addToRequestQueue(getRequest);
     }
 }

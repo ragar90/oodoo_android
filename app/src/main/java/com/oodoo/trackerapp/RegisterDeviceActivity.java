@@ -59,32 +59,19 @@ public class RegisterDeviceActivity extends ActionBarActivity {
                 toast.show();
             }
         };
-        Response.ErrorListener errorListener = new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError volleyError) {
-                if(volleyError != null){
-                    Toast toast = Toast.makeText(RegisterDeviceActivity.this, "Something Happened with the server connection", Toast.LENGTH_SHORT);
-
-                    //NOTE: For modify the toast apparence use a custom view and a custom layout file
-                    //toast.setView(getLayoutInflater().inflate(R.layout.some_toast_layout,null));
-
-                    toast.show();
-                    Log.e("TrackingRoutes", volleyError.toString());
-                }
-            }
-        };
         JSONObject postRequestJSONObject = new JSONObject();
         String devicePhoneNumber = "+1" + devicePhoneNumberTxt.getText().toString();
         String deviceAliasName = deviceAliasNameTxt.getText().toString();
         try {
-            postRequestJSONObject.put("device_number", devicePhoneNumber);
+            postRequestJSONObject.put("phone_number", devicePhoneNumber);
             postRequestJSONObject.put("alias_name", deviceAliasName);
         } catch (JSONException e) {
             Toast toast = Toast.makeText(RegisterDeviceActivity.this, "Something Happened with the server connection", Toast.LENGTH_SHORT);
             toast.show();
             e.printStackTrace();
         }
-        JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.POST,url,postRequestJSONObject,registerDeviceListener,errorListener);
+
+        JsonObjectRequest getRequest = VolleyHelper.getJsonObjectRequest(Request.Method.POST,url,postRequestJSONObject,registerDeviceListener);
         VolleyHelper.getInstance(this).addToRequestQueue(getRequest);
     }
 

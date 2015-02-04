@@ -2,6 +2,7 @@ package com.oodoo.models;
 
 import android.util.Log;
 
+import com.google.gson.annotations.SerializedName;
 import com.oodoo.utils.JsonDateParser;
 
 import org.json.JSONObject;
@@ -12,12 +13,23 @@ import java.util.Date;
  * Created by ragar90 on 1/11/15.
  */
 public class User {
-    String name;
-    String lastname;
-    String facebookToken;
-    String email;
-    String createdAt;
-    String updatedAt;
+    @SerializedName("name")
+    private String name;
+
+    @SerializedName("lastname")
+    private String lastname;
+
+    @SerializedName("facebookToken")
+    private String facebookToken;
+
+    @SerializedName("email")
+    private String email;
+
+    @SerializedName("createdAt")
+    private String createdAt;
+
+    @SerializedName("updatedAt")
+    private String updatedAt;
 
     public User(JSONObject json){
         try{

@@ -8,7 +8,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.facebook.Request;
 import com.facebook.Response;
 import com.facebook.Session;
@@ -18,6 +20,10 @@ import com.facebook.model.GraphUser;
 import com.facebook.widget.LoginButton;
 import com.oodoo.models.User;
 import com.oodoo.models.Users;
+import com.oodoo.utils.VolleyHelper;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.Arrays;
 
@@ -94,26 +100,43 @@ public class LoginFacebookFragment extends Fragment {
         if (state.isOpened()) {
             if(!Users.isUserSignedIn()){
                 final String authToken = session.getAccessToken();
-                Request.newMeRequest(session, new Request.GraphUserCallback() {
-                    @Override
-                    public void onCompleted(GraphUser user, Response response) {
-                        if (user != null) {
-                            Users.getOrCreateUser(user,authToken);
+                if(Users.getCurrentUser() == null){
+                    Request.newMeRequest(session, new Request.GraphUserCallback() {
+                        @Override
+                        public void onCompleted(GraphUser user, Response response) {
+                            if (user != null) {
+                                signInServer(user,authToken);
+                            }
                         }
-                    }
-                }).executeAsync();
+                    }).executeAsync();
+                }
+                else{
+                    goToDeviceList();
+                }
+
             }
-            //Request.newMeRequest(session, new Request.GraphUserCallback() {
-            //    @Override
-            //    public void onCompleted(GraphUser user, Response response) {
-            //        if (user != null) {
-            //            mSaludo.setText("Bienvenido " + user.getName() + "!");
-            //        }
-            //    }
-            //}).executeAsync();
         } else if (state.isClosed()) {
             Users.closeSession();
         }
+    }
+    private void signInServer(GraphUser fbUser, String authToken){
+        VolleyHelper.setFacebookSessionVariables(fbUser.getId(), authToken);
+        com.android.volley.Response.Listener<JSONObject> userListener = new com.android.volley.Response.Listener<JSONObject>(){
+
+            @Override
+            public void onResponse(JSONObject json) {
+                User user = new User(json);
+                Users.setCurrentUser(user);
+                goToDeviceList();
+            }
+        };
+        Users.getOrCreateUser(fbUser,authToken,this.getActivity(),userListener);
+    }
+
+    private void goToDeviceList(){
+        Intent deviceListActivityIntent = new Intent(LoginFacebookFragment.this.getActivity(), DeviceListActivity.class);
+        deviceListActivityIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        LoginFacebookFragment.this.getActivity().startActivity(deviceListActivityIntent);
     }
 
     private Session.StatusCallback callback = new Session.StatusCallback() {

@@ -1,5 +1,6 @@
 package com.oodoo.models;
 
+import android.content.Context;
 import android.util.Log;
 
 import com.android.volley.Request;
@@ -8,6 +9,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.facebook.Session;
 import com.facebook.model.GraphUser;
+import com.oodoo.utils.VolleyHelper;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -21,23 +23,12 @@ public class Users {
     public static User getCurrentUser() {
         return currentUser;
     }
+    public static void setCurrentUser(User user){currentUser = user;}
     public static void closeSession(){
         currentUser = null;
     }
-    private static Response.ErrorListener errorListener = new Response.ErrorListener() {
-        @Override
-        public void onErrorResponse(VolleyError volleyError) {
-            if(volleyError != null) Log.e("GetDevices", volleyError.getMessage());
-        }
-    };
-    private static Response.Listener<JSONObject> newOrOldUserListener = new Response.Listener<JSONObject>(){
-        @Override
-        public void onResponse(JSONObject json) {
-            currentUser = new User(json);
-        }
-    };
-    public static void getOrCreateUser(GraphUser fbUser, String authToken ){
-        String url = "";
+    public static void getOrCreateUser(GraphUser fbUser, String authToken, Context context, Response.Listener<JSONObject> listener){
+        String url = "http://oodoo.herokuapp.com/sessions.json";
         JSONObject jsonUser = new JSONObject();
         JSONObject jsonParams = new JSONObject();
         try{
@@ -46,7 +37,9 @@ public class Users {
             jsonUser.put("facebook_id",authToken);
             jsonUser.put("facebook_token",fbUser.getId());
             jsonParams.put("user", jsonUser);
-            JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.POST,url,jsonParams,newOrOldUserListener,errorListener);
+            VolleyHelper.getJsonObjectRequest(Request.Method.POST,url,jsonParams,listener);
+            JsonObjectRequest request = VolleyHelper.getJsonObjectRequest(Request.Method.POST,url,jsonParams,listener);
+            VolleyHelper.getInstance(context).addToRequestQueue(request);
         }
         catch(Exception ex){
             Log.e("UserAuthError", ex.getMessage());

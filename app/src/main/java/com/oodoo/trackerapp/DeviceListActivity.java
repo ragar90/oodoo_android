@@ -135,7 +135,7 @@ public class DeviceListActivity extends FragmentActivity
             }
         };
         String url = "https://oodoo.herokuapp.com/devices.json";
-        JsonArrayRequest getRequest = new JsonArrayRequest(url,deviceListListener, errorListener);
+        JsonArrayRequest getRequest = VolleyHelper.getJsonArrayRequest(url,deviceListListener);
         VolleyHelper.getInstance(this).addToRequestQueue(getRequest);
     }
 }
