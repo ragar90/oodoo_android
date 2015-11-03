@@ -43,6 +43,10 @@ public class LoginFacebookFragment extends Fragment {
         super.onCreate(savedInstanceState);
         uiHelper = new UiLifecycleHelper(getActivity(), callback);
         uiHelper.onCreate(savedInstanceState);
+        User user = Users.getCurrentUser();
+        if(user == null){
+            Log.e("Session Error", "No Session Found");
+        }
     }
 
 

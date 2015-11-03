@@ -34,8 +34,8 @@ public class Users {
         try{
             jsonUser.put("name", fbUser.getName());
             jsonUser.put("lastname", fbUser.getLastName());
-            jsonUser.put("facebook_id",authToken);
-            jsonUser.put("facebook_token",fbUser.getId());
+            jsonUser.put("facebook_token",authToken);
+            jsonUser.put("facebook_id",fbUser.getId());
             jsonParams.put("user", jsonUser);
             VolleyHelper.getJsonObjectRequest(Request.Method.POST,url,jsonParams,listener);
             JsonObjectRequest request = VolleyHelper.getJsonObjectRequest(Request.Method.POST,url,jsonParams,listener);

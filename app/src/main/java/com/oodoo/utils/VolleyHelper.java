@@ -47,9 +47,13 @@ public class VolleyHelper {
     }
 
     public static JsonArrayRequest getJsonArrayRequest(String url,Response.Listener<JSONArray> arrayListener){
+        return getJsonArrayRequest(url, arrayListener, genericErrorListener);
+    }
+
+    public static JsonArrayRequest getJsonArrayRequest(String url,Response.Listener<JSONArray> arrayListener, Response.ErrorListener errorListener ){
         JsonArrayRequest request = new com.android.volley.toolbox.JsonArrayRequest(url,arrayListener,errorListener){
             @Override
-            public HashMap<String, String> getParams(){
+            public HashMap<String, String> getHeaders(){
                 HashMap<String, String> params = new HashMap<String, String>();
                 params.put("app-token",HEROKU_APP_TOKEN_ID);
                 params.put("facebook-user-id",facebookUserId);
@@ -61,25 +65,28 @@ public class VolleyHelper {
     }
 
     public static JsonObjectRequest getJsonObjectRequest(int method, String url, JSONObject params, Response.Listener<JSONObject> listener){
-        JsonObjectRequest request = new JsonObjectRequest(method,url,params,listener,errorListener){
+        JsonObjectRequest request = new JsonObjectRequest(method,url,params,listener, genericErrorListener){
             @Override
-            public HashMap<String, String> getParams(){
-                HashMap<String, String> params = new HashMap<String, String>();
-                params.put("app-token",HEROKU_APP_TOKEN_ID);
+            public HashMap<String, String> getHeaders(){
+                HashMap<String, String> headers = new HashMap<String, String>();
+                headers.put("app-token", HEROKU_APP_TOKEN_ID);
                 if(facebookUserId != null && facebookUserSessionToken != null){
-                    params.put("facebook-user-id",facebookUserId);
-                    params.put("facebook-token",facebookUserSessionToken);
+                    headers.put("facebook-user-id", facebookUserId);
+                    headers.put("facebook-token", facebookUserSessionToken);
                 }
-                return params;
+                return headers;
             }
         };
         return request;
     }
 
-    private static Response.ErrorListener errorListener = new Response.ErrorListener() {
+    private static Response.ErrorListener genericErrorListener = new Response.ErrorListener() {
         @Override
         public void onErrorResponse(VolleyError volleyError) {
-            if(volleyError != null) Log.e("GetDevices", volleyError.getMessage());
+            if(volleyError != null){
+                String msg = volleyError.getMessage() == null ? "Some Error Happened" : volleyError.getMessage();
+                Log.e("Volley Error", msg);
+            }
         }
     };
 

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -131,11 +132,17 @@ public class DeviceListActivity extends FragmentActivity
         Response.ErrorListener errorListener = new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
-                if(volleyError != null) Log.e("GetDevices", volleyError.getMessage());
+                if(volleyError != null){
+                    Log.e("Network Error", "Network Error");
+                    volleyError.printStackTrace();
+                    pd.dismiss();
+                    Toast toast = Toast.makeText(DeviceListActivity.this, "Network Connection Problem", Toast.LENGTH_LONG);
+                    toast.show();
+                }
             }
         };
         String url = "https://oodoo.herokuapp.com/devices.json";
-        JsonArrayRequest getRequest = VolleyHelper.getJsonArrayRequest(url,deviceListListener);
+        JsonArrayRequest getRequest = VolleyHelper.getJsonArrayRequest(url,deviceListListener,errorListener);
         VolleyHelper.getInstance(this).addToRequestQueue(getRequest);
     }
 }
